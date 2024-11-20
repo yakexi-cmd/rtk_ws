@@ -1,0 +1,54 @@
+#!/bin/bash
+
+gnome-terminal -- bash -c "sudo -S <<< "8705" chmod 777 /dev/ttyUSB0;"
+
+enable_yolo=1 
+echo "total val number : $#"
+if [[ $# -ge 1 ]]; then
+     enable_yolo=$1
+fi
+
+echo "enable_yolo : $enable_yolo."
+
+if [[ $enable_yolo -ge 1 ]]; then
+    #  gnome-terminal --window -e 'bash -c "roscore; exec bash"' \
+    #  --tab -e 'bash -c "sleep 2; source ~/far_planner/devel/setup.bash; roslaunch far_planner run_fast_lio_dynamic.launch; exec bash"' \
+     gnome-terminal --window -e 'bash -c "sleep 2;source ~/lidar_slam/rtk_ws/devel/setup.bash; roslaunch direct_lidar_inertial_odometry lidar_slam.launch; exec bash"' \
+     --tab -e 'bash -c "sleep 5;source ~/lidar_slam/rtk_ws/devel/setup.bash; roslaunch ego_planner run_in_sim.launch; exec bash"' \
+    --tab -e 'bash -c "sleep 5;source ~/ws_cb/devel/setup.bash; roslaunch demon_lizard_40 mpc_control.launch; exec bash"' \
+    #  --tab -e 'bash -c "sleep 5; conda deactivate;source ~/catkin_ws/devel/setup.bash; roslaunch yolo_kx yolo_save.launch; exec bash"' 
+else
+     gnome-terminal --window -e 'bash -c "roscore; exec bash"' \
+     --tab -e 'bash -c "sleep 2;source ~/far_planner/devel/setup.bash; roslaunch far_planner run_fast_lio_dynamic.launch; exec bash"' \
+     --tab -e 'bash -c "sleep 5;source ~/groud_planner/devel/setup.bash; roslaunch ego_planner run_in_sim.launch; exec bash"' \
+     --tab -e 'bash -c "sleep 5;source ~/ws_cb/devel/setup.bash; roslaunch demon_lizard_40 mpc_control.launch; exec bash"' 
+fi
+
+TOPIC_NAME="/wit/imu"
+HZ=0.0
+count=0
+while [[ $count -lt 2 ]]; do
+    HZ=$(timeout 2s rostopic hz $TOPIC_NAME 2>&1 | grep -oP '\d+(\.\d+)?')
+    if [ -z "$HZ" ]; then
+	HZ=0
+    else
+	HZ=${HZ%.*}    
+    fi
+    echo "$TOPIC_NAME publish $HZ hz ." 
+    echo "count : $count."
+    if [[ $HZ -ge 1 ]]; then
+	break
+    fi
+    count=$((count+1))
+    sleep 1
+done
+
+if [[ $HZ -le 1 ]]; then
+    echo "$TOPIC_NAME not work, prepare restart. "
+    if rosnode list | grep -q "/imu"; then
+        rosnode kill /imu
+	echo "node /imu has been killed. "
+	rosrun wit_ros_imu wit_hcan_ros.py
+    fi
+fi
+
