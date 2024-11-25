@@ -1,0 +1,28 @@
+<launch>
+    <arg name="rviz" default="false"/>
+    <arg name="pointcloud_topic" default="lidar"/>
+    <arg name="imu_topic" default="imu"/>
+    <node name="dlio_odom" pkg="direct_lidar_inertial_odometry" type="dlio_odom_node" output="screen" clear_params="true">
+        <rosparam file="$(find direct_lidar_inertial_odometry)/cfg/dlio.yaml" command="load" />
+        <rosparam file="$(find direct_lidar_inertial_odometry)/cfg/params.yaml" command="load" />
+        <!-- 接收话题的名称映射 -->
+        <remap from="~pointcloud" to="$(arg pointcloud_topic)" />
+        <remap from="~imu" to="$(arg imu_topic)"/>
+        <!-- 发布话题的名称映射 -->
+        <remap from="~odom"     to="dlio/odom_node/odom"/>
+        <remap from="~pose"     to="dlio/odom_node/pose"/>
+        <remap from="~path"     to="dlio/odom_node/path"/>
+        <remap from="~kf_pose"  to="dlio/odom_node/keyframes"/>
+        <remap from="~kf_cloud" to="dlio/odom_node/pointcloud/keyframe"/>
+        <remap from="~deskewed" to="dlio/odom_node/pointcloud/deskewed"/>
+
+    </node>
+
+    <node name="dlio_map" pkg="direct_lidar_inertial_odometry" type="dlio_map_node" output="log" clear_params="true">
+        <rosparam file="$(find direct_lidar_inertial_odometry)/cfg/dlio.yaml" command="load" />
+        <rosparam file="$(find direct_lidar_inertial_odometry)/cfg/params.yaml" command="load" />
+        <remap from="~keyframes" to="dlio/odom_node/pointcloud/keyframe"/>
+        <remap from="~map" to="dlio/map_node/map"/>       
+    </node>
+    <node pkg="tf" type="static_transform_publisher" name="odom_to_map" args="0.0 0 0.0 0 0 0 /odom /map 1000" />
+</launch>

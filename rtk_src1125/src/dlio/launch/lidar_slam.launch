@@ -1,0 +1,17 @@
+<launch>
+    <include file="$(find rslidar_sdk)/launch/start.launch" />
+    <include file="$(find wit_ros_imu)/launch/wit_imu.launch" />
+
+    <node pkg="lidar_repub" type="lidar_repub_node" name="lidar_repub_node" output="screen" required="true">
+        <param name="lidar_topic" value="/rslidar_points" />
+    </node>
+
+    <include file="$(find direct_lidar_inertial_odometry)/launch/dlio.launch" >
+        <arg name="rviz" value="false" />
+        <arg name="pointcloud_topic" value="/velodyne_points" />
+        <arg name="imu_topic" value="/wit/imu" />
+    </include>
+    <node pkg="tf" type="static_transform_publisher" name="cameraLinkTransPublisher" args="0.2 0 -0.3 0 0 0 /lidar /camera_link 1000"/>
+
+
+</launch>
