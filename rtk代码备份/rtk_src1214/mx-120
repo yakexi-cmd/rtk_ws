@@ -1,0 +1,9 @@
+#!/bin/bash
+
+gnome-terminal -- bash -c "sudo -S <<< "weiminlou705" chmod 777 /dev/ttyUSB0;"
+
+gnome-terminal --window -e 'bash -c "source ~/disk/lidar_slam/ws_cb/devel/setup.bash; roscore; exec bash"' \
+--tab -e 'bash -c "sleep 2;source ~/disk/lidar_slam/rtk_ws/devel/setup.bash; roslaunch direct_lidar_inertial_odometry lidar_slam.launch; exec bash"' \
+--tab -e 'bash -c "sleep 5;source ~/disk/lidar_slam/rtk_ws/devel/setup.bash; roslaunch ego_planner run_in_sim.launch; exec bash"' \
+--tab -e 'bash -c "sleep 5;source ~/disk/lidar_slam/ws_cb/devel/setup.bash; roslaunch kuaixiang3_control kuaixiang3_control.launch; exec bash"' \
+

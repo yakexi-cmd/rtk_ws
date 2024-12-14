@@ -1,0 +1,9 @@
+<library path="lib/libshared_control_line">
+  <class name="shared_control_line/SharedControl"
+         type="SharedControl"
+         base_class_type="rviz::Tool">
+    <description>
+      liuzubing test shared_control_line_tool.
+    </description>
+  </class>
+</library>
