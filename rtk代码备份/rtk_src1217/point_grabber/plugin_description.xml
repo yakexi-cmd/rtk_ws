@@ -1,0 +1,9 @@
+<library path="lib/libpoint_grabber">
+  <class name="point_grabber/PointGrabber"
+         type="PointGrabber"
+         base_class_type="rviz::Tool">
+    <description>
+      liuzubing test point_grabber_tool.
+    </description>
+  </class>
+</library>
