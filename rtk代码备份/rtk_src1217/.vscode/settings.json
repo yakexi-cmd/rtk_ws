@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "/Users/yfy/Documents/课题组/北理工技术协议/rtk代码备份/rtk_src1217/ddynamic_reconfigure"
+    "cmake.sourceDirectory": "/Users/yfy/Documents/课题组/北理工技术协议/rtk代码备份/rtk_src1217/ddynamic_reconfigure",
+    "files.associations": {
+        "string": "cpp"
+    }
 }
