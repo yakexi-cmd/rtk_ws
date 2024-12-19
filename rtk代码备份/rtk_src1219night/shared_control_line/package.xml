@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <name>shared_control_line</name>
+  <version>0.0.0</version>
+  <description>The shared_control_line package</description>
+  <maintainer email="zubing.liu@allride.ai">zubing.liu</maintainer>
+ 
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rviz</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>qtbase5-dev</build_depend>
+ 
+  <run_depend>rviz</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>libqt5-core</run_depend>
+  <run_depend>libqt5-widgets</run_depend>
+ 
+  <export>
+      <rviz plugin="${prefix}/plugin_description.xml"/>
+  </export>
+ 
+</package>
